@@ -1,0 +1,28 @@
+[package]
+name = "keyboard-bridge-tauri"
+version = "0.2.5"
+description = "键盘输入桥 Tauri 版"
+authors = ["KeyboardBridge"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+arboard = "3"
+serde = { version = "1", features = ["derive"] }
+tauri = { version = "2", features = ["tray-icon", "image-png", "image-ico"] }
+windows-sys = { version = "0.61", features = [
+  "Win32_Foundation",
+  "Win32_System_LibraryLoader",
+  "Win32_UI_Input_KeyboardAndMouse",
+  "Win32_UI_WindowsAndMessaging"
+] }
+winreg = "0.55"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true

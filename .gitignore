@@ -1,0 +1,17 @@
+.DS_Store
+*.log
+
+# macOS build output
+macos/dist/
+
+# .NET build output
+windows/winforms/bin/
+windows/winforms/obj/
+windows/winforms/dist/
+
+# Rust / Tauri build output
+windows/tauri/src-tauri/target/
+
+# Editors
+.idea/
+.vscode/

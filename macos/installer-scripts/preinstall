@@ -1,0 +1,47 @@
+#!/bin/zsh
+set -eu
+
+target_volume="${3:-/}"
+expected_bundle_id="local.keyboardbridge.app"
+system_app="$target_volume/Applications/KeyboardBridge.app"
+
+bundle_id_for_app() {
+  /usr/bin/defaults read "$1/Contents/Info" CFBundleIdentifier 2>/dev/null || true
+}
+
+remove_old_copy() {
+  local app_path="$1"
+  [[ -d "$app_path" ]] || return 0
+
+  local found_bundle_id
+  found_bundle_id=$(bundle_id_for_app "$app_path")
+  if [[ "$found_bundle_id" != "$expected_bundle_id" ]]; then
+    echo "Refusing to replace unexpected application at: $app_path" >&2
+    exit 1
+  fi
+
+  local old_version
+  old_version=$(/usr/bin/defaults read "$app_path/Contents/Info" CFBundleShortVersionString 2>/dev/null || echo unknown)
+  echo "Replacing KeyboardBridge $old_version at: $app_path"
+  /bin/rm -rf -- "$app_path"
+}
+
+if [[ "$target_volume" == "/" ]]; then
+  /usr/bin/pkill -f '/KeyboardBridge.app/Contents/MacOS/KeyboardBridge' 2>/dev/null || true
+fi
+
+remove_old_copy "$system_app"
+
+# Earlier builds offered a per-user installation. Remove that verified old copy
+# so macOS privacy settings do not display two applications with the same name.
+if [[ "$target_volume" == "/" ]]; then
+  console_user=$(/usr/bin/stat -f '%Su' /dev/console 2>/dev/null || true)
+  if [[ -n "$console_user" && "$console_user" != "root" && "$console_user" != "loginwindow" ]]; then
+    user_home=$(/usr/bin/dscl . -read "/Users/$console_user" NFSHomeDirectory 2>/dev/null | /usr/bin/awk '{print $2}')
+    if [[ -n "$user_home" ]]; then
+      remove_old_copy "$user_home/Applications/KeyboardBridge.app"
+    fi
+  fi
+fi
+
+exit 0

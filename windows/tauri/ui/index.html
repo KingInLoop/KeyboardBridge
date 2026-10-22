@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>键盘输入桥</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section id="safetyNotice" class="notice" aria-label="安全提示">
+      <span class="notice-icon">!</span>
+      <p>请检查内容后再输入。不要粘贴密码、令牌或私钥；换行默认会替换为空格。</p>
+      <button id="noticeClose" class="notice-close" type="button" aria-label="隐藏安全提示" hidden>×</button>
+    </section>
+
+    <section class="card editor-card">
+      <header class="card-header">
+        <label for="textInput">待输入内容</label>
+        <span id="textInfo">0 字符 · 1 行</span>
+      </header>
+      <textarea id="textInput" maxlength="100000" spellcheck="false" autofocus></textarea>
+    </section>
+
+    <section class="card settings-card">
+      <div class="setting-row">
+        <div class="setting-pair">
+          <label for="delayMs">字符间隔（毫秒）</label>
+          <input id="delayMs" type="number" min="0" max="1000" value="10" />
+        </div>
+        <div class="setting-pair">
+          <label for="countdownSeconds">输入倒计时（秒）</label>
+          <input id="countdownSeconds" type="number" min="1" max="30" value="3" />
+        </div>
+        <div class="setting-pair scale-pair">
+          <label for="uiScale">界面大小</label>
+          <select id="uiScale">
+            <option value="small">小</option>
+            <option value="medium" selected>中</option>
+            <option value="large">大</option>
+          </select>
+        </div>
+      </div>
+      <div class="setting-row check-row">
+        <label class="check"><input id="allowReturn" type="checkbox" /><span>允许回车（可能直接执行命令）</span></label>
+        <label class="check"><input id="dryRun" type="checkbox" /><span>演练模式（不发送按键）</span></label>
+        <label class="check"><input id="monitorCopy" type="checkbox" checked /><span>监听 Ctrl+C 并自动唤起窗口</span></label>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button id="startButton" class="button primary">3 秒后输入</button>
+      <button id="stopButton" class="button secondary">停止&nbsp;&nbsp;Ctrl+Alt+Esc</button>
+    </div>
+
+    <footer id="status" aria-live="polite">就绪</footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
