@@ -28,21 +28,20 @@ KeyboardBridge 是一个本地、可见、需要人工确认的“文本转键�
 
 下面以 macOS 界面为例，Windows 版的操作流程相同。
 
-### 1. 粘贴或载入内容并检查
+先粘贴或载入内容并检查，发送前可修改文本、字符间隔、倒计时和回车策略。点击“几秒后输入”后，在倒计时结束前点中目标文本框；窗口不会抢回输入焦点。
 
-可以开启复制监听，也可以直接点击待输入区按 `Command+V` / `Ctrl+V`，或使用“粘贴”按钮。发送前可修改文本、字符间隔、倒计时和回车策略。
-
-<p align="center">
-  <img src="docs/images/macos-main-window.png" width="478" alt="KeyboardBridge 内容预览、输入设置与权限状态">
-</p>
-
-### 2. 点击输入并选择目标位置
-
-点击“几秒后输入”后，在倒计时结束前点中目标文本框。窗口不会抢回输入焦点；需要终止时，可按 macOS 的 `Option+Esc` 或 Windows 的 `Ctrl+Alt+Esc`。
-
-<p align="center">
-  <img src="docs/images/macos-countdown-demo.png" width="478" alt="KeyboardBridge 倒计时期间提示用户点击目标输入位置">
-</p>
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/images/macos-main-window.png" width="280" alt="KeyboardBridge 内容预览、输入设置与权限状态"><br>
+      <sub>① 检查内容和输入选项</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/images/macos-countdown-demo.png" width="280" alt="KeyboardBridge 倒计时期间提示用户点击目标输入位置"><br>
+      <sub>② 倒计时期间点击目标输入位置</sub>
+    </td>
+  </tr>
+</table>
 
 第一次使用建议勾选“演练模式”：它会完整走一遍倒计时和字符处理，但不会真正发送按键。
 
@@ -64,6 +63,50 @@ KeyboardBridge 是一个本地、可见、需要人工确认的“文本转键�
 4. 开启“监听 ⌘C 并自动唤起窗口”后，按 `Command+C` 复制文字、表单内容或命令，置顶窗口会立即出现并显示可编辑预览；重复复制相同内容也会触发。
 5. 根据需要设置 1–30 秒输入倒计时和小/中/大界面档位，再点击“几秒后输入”，立刻点到要输入的位置。
 6. 如需紧急停止，按 `Option + Esc`。
+
+#### macOS 授权图解
+
+KeyboardBridge 使用两项独立权限：
+
+- **键盘输入权限**：用于向目标界面发送按键。不同 macOS 版本中，这一页可能叫“辅助功能”或“设备控制和数据访问”。
+- **输入监控权限**：仅用于监听全局 `Command+C`；关闭自动监听时仍可手动粘贴和发送。
+
+在两个列表中找到 `KeyboardBridge.app` 并打开右侧开关。页面左下角都有“+”按钮，只有列表里找不到应用时才需要手动添加。
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/images/macos-permission-list.png" width="340" alt="在设备控制和数据访问列表中启用 KeyboardBridge"><br>
+      <sub>① 开启“辅助功能 / 设备控制和数据访问”</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/images/macos-input-monitoring.png" width="340" alt="在输入监控列表中启用 KeyboardBridge"><br>
+      <sub>② 开启“输入监控”</sub>
+    </td>
+  </tr>
+</table>
+
+如果列表中没有 `KeyboardBridge.app`：
+
+1. 点击列表左下角的“+”，按系统提示使用 Touch ID 或登录密码验证。
+2. 在文件选择窗口进入“应用程序”，选择 `/Applications/KeyboardBridge.app`，再点击“打开”。
+3. 回到权限列表，确认 `KeyboardBridge.app` 右侧开关已经打开；如果 macOS 提示重新启动应用，请退出后重新打开。
+4. 返回 KeyboardBridge，点击权限状态旁的“刷新状态”。另一项权限缺失时，用同样方法再添加一次。
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/images/macos-permission-authentication.png" width="320" alt="点击添加后使用 Touch ID 或密码验证"><br>
+      <sub>③ 使用 Touch ID 或登录密码验证</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/images/macos-select-installed-app.png" width="360" alt="在应用程序文件夹选择 KeyboardBridge.app"><br>
+      <sub>④ 从“应用程序”选择 KeyboardBridge.app</sub>
+    </td>
+  </tr>
+</table>
+
+请优先安装 Release 中的 `.pkg`，确保应用位于 `/Applications/KeyboardBridge.app`。不要把下载目录、解压目录或旧版本副本添加进授权列表；如果列表里已有无效旧条目，可选中后点击“−”移除，再按上述步骤添加已安装的新版本。
 
 无论“监听 ⌘C”开启还是关闭，都可以点击待输入区后直接按 `Command+V`，也可以点击标题右侧的“粘贴”按钮。监听开关只控制复制后的自动载入和自动唤起，不影响手动粘贴、手动编辑或发送。
 
